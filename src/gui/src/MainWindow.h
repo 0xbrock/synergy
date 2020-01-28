@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -83,12 +83,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 			Info
 		};
 
-		enum qProcessorArch {
-			x86,
-			x64,
-			unknown
-		};
-
 	public:
 		MainWindow(QSettings& settings, AppConfig& appConfig);
 		~MainWindow();
@@ -111,7 +105,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void autoAddScreen(const QString name);
 		void updateZeroconfService();
 		void serverDetected(const QString name);
-		int checkWinArch();
+		void setEdition(int type);
+		void updateLocalFingerprint();
 
 	public slots:
 		void appendLogRaw(const QString& text);
@@ -162,10 +157,18 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void stopDesktop();
 		void changeEvent(QEvent* event);
 		void retranslateMenuBar();
+#if defined(Q_OS_WIN)
 		bool isServiceRunning(QString name);
+#else
+		bool isServiceRunning();
+#endif
 		bool isBonjourRunning();
 		void downloadBonjour();
 		void promptAutoConfig();
+		void updateEdition();
+		QString getProfileRootForArg();
+		void checkFingerprint(const QString& line);
+		bool autoHide();
 
 	private:
 		QSettings& m_Settings;

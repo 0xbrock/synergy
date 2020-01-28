@@ -4,7 +4,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -101,7 +101,7 @@ DragInformation::getDragFileExtension(String filename)
 int
 DragInformation::setupDragInfo(DragFileList& fileList, String& output)
 {
-	int size = fileList.size();
+	int size = static_cast<int>(fileList.size());
 	for (int i = 0; i < size; ++i) {
 		output.append(fileList.at(i).getFilename());
 		output.append(",");

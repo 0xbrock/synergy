@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -163,7 +163,6 @@ private:
 	"*     --restart            restart the server automatically if it fails.\n" \
 	"  -l  --log <file>         write log messages to file.\n" \
 	"      --no-tray            disable the system tray icon.\n" \
-	"      --crypto-pass <pass> enable encryption, using the given password.\n" \
 	"      --enable-drag-drop   enable file drag & drop.\n"
 
 #define HELP_COMMON_INFO_2 \

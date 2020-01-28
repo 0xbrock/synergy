@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,6 +21,7 @@
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
+#include "server/ClientListener.h"
 #include "synergy/IPlatformScreen.h"
 #include "synergy/DropHelper.h"
 #include "synergy/option_types.h"
@@ -30,6 +31,8 @@
 #include "synergy/FileChunker.h"
 #include "synergy/KeyState.h"
 #include "synergy/Screen.h"
+#include "synergy/PacketStreamFilter.h"
+#include "net/TCPSocket.h"
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
 #include "net/XSocket.h"
@@ -1358,7 +1361,11 @@ Server::handleClientDisconnected(const Event&, void* vclient)
 	BaseClientProxy* client = reinterpret_cast<BaseClientProxy*>(vclient);
 	removeActiveClient(client);
 	removeOldClient(client);
+
+	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(client->getStream());
+	TCPSocket* socket = dynamic_cast<TCPSocket*>(streamFileter->getStream());
 	delete client;
+	m_clientListener->deleteSocket(socket);
 }
 
 void
@@ -1368,7 +1375,10 @@ Server::handleClientCloseTimeout(const Event&, void* vclient)
 	BaseClientProxy* client = reinterpret_cast<BaseClientProxy*>(vclient);
 	LOG((CLOG_NOTE "forced disconnection of client \"%s\"", getName(client).c_str()));
 	removeOldClient(client);
+	PacketStreamFilter* streamFileter = dynamic_cast<PacketStreamFilter*>(client->getStream());
+	TCPSocket* socket = dynamic_cast<TCPSocket*>(streamFileter->getStream());
 	delete client;
+	m_clientListener->deleteSocket(socket);
 }
 
 void

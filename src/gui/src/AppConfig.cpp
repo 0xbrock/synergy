@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,6 +17,7 @@
  */
 
 #include "AppConfig.h"
+#include "EditionType.h"
 #include "QUtility.h"
 
 #include <QtCore>
@@ -52,11 +53,12 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_Interface(),
 	m_LogLevel(0),
 	m_WizardLastRun(0),
-	m_CryptoPass(),
 	m_ProcessMode(DEFAULT_PROCESS_MODE),
 	m_AutoConfig(true),
 	m_ElevateMode(false),
-	m_AutoConfigPrompted(false)
+	m_AutoConfigPrompted(false),
+	m_CryptoEnabled(false),
+	m_AutoHide(false)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -120,13 +122,16 @@ void AppConfig::loadSettings()
 	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
 	m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
-	m_CryptoPass = settings().value("cryptoPass", "").toString();
-	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
 	m_Language = settings().value("language", QLocale::system().name()).toString();
 	m_StartedBefore = settings().value("startedBefore", false).toBool();
 	m_AutoConfig = settings().value("autoConfig", true).toBool();
 	m_ElevateMode = settings().value("elevateMode", false).toBool();
 	m_AutoConfigPrompted = settings().value("autoConfigPrompted", false).toBool();
+	m_Edition = settings().value("edition", Unknown).toInt();
+	m_ActivateEmail = settings().value("activateEmail", "").toString();
+	m_UserToken = settings().value("userToken", "").toString();
+	m_CryptoEnabled = settings().value("cryptoEnabled", false).toBool();
+	m_AutoHide = settings().value("autoHide", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -138,29 +143,16 @@ void AppConfig::saveSettings()
 	settings().setValue("logToFile", m_LogToFile);
 	settings().setValue("logFilename", m_LogFilename);
 	settings().setValue("wizardLastRun", kWizardVersion);
-	settings().setValue("cryptoPass", m_CryptoPass);
-	settings().setValue("cryptoEnabled", m_CryptoEnabled);
 	settings().setValue("language", m_Language);
 	settings().setValue("startedBefore", m_StartedBefore);
 	settings().setValue("autoConfig", m_AutoConfig);
 	settings().setValue("elevateMode", m_ElevateMode);
 	settings().setValue("autoConfigPrompted", m_AutoConfigPrompted);
-}
-
-void AppConfig::setCryptoPass(const QString &s)
-{
-	// clear field to user doesn't get confused.
-	if (s.isEmpty())
-	{
-		m_CryptoPass.clear();
-		return;
-	}
-
-	// only hash if password changes -- don't re-hash the hash.
-	if (m_CryptoPass != s)
-	{
-		m_CryptoPass = hash(s);
-	}
+	settings().setValue("edition", m_Edition);
+	settings().setValue("activateEmail", m_ActivateEmail);
+	settings().setValue("userToken", m_UserToken);
+	settings().setValue("cryptoEnabled", m_CryptoEnabled);
+	settings().setValue("autoHide", m_AutoHide);
 }
 
 void AppConfig::setAutoConfig(bool autoConfig)

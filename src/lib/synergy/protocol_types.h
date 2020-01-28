@@ -5,7 +5,7 @@
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
+ * found in the file LICENSE that should have accompanied this file.
  * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +27,7 @@
 // 1.3:  adds keep alive and deprecates heartbeats,
 //       adds horizontal mouse scrolling
 // 1.4:  adds crypto support
+// 1.5:  adds file transfer and removes home brew crypto
 // NOTE: with new version, synergy minor version should increment
 static const SInt16		kProtocolMajorVersion = 1;
 static const SInt16		kProtocolMinorVersion = 5;
@@ -250,11 +251,6 @@ extern const char*		kMsgDInfo;
 // client should set the given option/value pairs.  $1 = option/value
 // pairs.
 extern const char*		kMsgDSetOptions;
-
-// crypto iv:  primary -> secondary
-// sends a new iv (initialization vector) to the client for the
-// cryptography stream.
-extern const char*		kMsgDCryptoIv;
 
 // file data:  primary <-> secondary
 // transfer file data. A mark is used in the first byte.
